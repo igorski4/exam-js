@@ -12,8 +12,8 @@ const getData = async () => {
 
 let data = [...(await getData())];
 let countPost = 0;
-const dataFromLocalStorage = JSON.parse(localStorage.getItem("exam"));
-
+const dataFromLocalStorage = JSON.parse(localStorage.getItem("exam")) ?? [];
+console.log(dataFromLocalStorage);
 const setURL = () => {
   const inputText = input.value.trim().toLowerCase();
   let url = new URL("http://127.0.0.1:5500");
@@ -22,6 +22,7 @@ const setURL = () => {
 };
 
 const initialRender = () => {
+  console.log(dataFromLocalStorage.length);
   if (dataFromLocalStorage.length) {
     for (let elem of data) {
       let indexElement = dataFromLocalStorage.findIndex(
@@ -69,6 +70,7 @@ const handlerCheckbox = (event) => {
 };
 
 const handlerButton = () => {
+  countPost = 0;
   const inputText = input.value.trim().toLowerCase();
   const arrCheckbox = document.querySelectorAll(".item__checkbox");
   const arrCondition = [];
@@ -93,9 +95,9 @@ const handlerButton = () => {
     if (~index) {
       arrCard[i].classList.add("item__dark");
       arrCard[i].querySelector(".item__checkbox").checked = true;
+      countPost++;
     }
   }
-  countPost = arrCondition.length;
   count.textContent = `Количество выбранных постов: ${countPost}`;
   setURL();
 };
