@@ -19,6 +19,7 @@ const setURL = () => {
   const inputText = input.value.trim().toLowerCase();
   let url = new URL(window.location.href);
   if (inputText) url.searchParams.set("search", inputText);
+  else url.searchParams.delete("search");
   window.history.replaceState(null, null, url.href);
 };
 
