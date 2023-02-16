@@ -14,9 +14,10 @@ let data = [...(await getData())];
 let countPost = 0;
 const dataFromLocalStorage = JSON.parse(localStorage.getItem("exam")) ?? [];
 console.log(dataFromLocalStorage);
+
 const setURL = () => {
   const inputText = input.value.trim().toLowerCase();
-  let url = new URL("http://127.0.0.1:5500");
+  let url = new URL(window.location.href);
   if (inputText) url.searchParams.set("search", inputText);
   window.history.replaceState(null, null, url.href);
 };
