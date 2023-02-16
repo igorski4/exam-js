@@ -68,27 +68,34 @@ const handlerCheckbox = (event) => {
   count.textContent = `Количество выбранных постов: ${countPost}`;
 };
 
-const handlerClickItem = (event) => {
-  let tempParent = event.target;
-  if (!tempParent.classList.contains("grid__item"))
-    tempParent = tempParent.parentElement;
-  const tempCheckbox = tempParent.querySelector(".item__checkbox");
-  if (!tempCheckbox.checked) {
-    tempParent.classList.add("item__dark");
-    countPost++;
-  } else {
-    tempParent.classList.remove("item__dark");
-    countPost--;
-  }
-  tempCheckbox.checked = !tempCheckbox.checked;
-  count.textContent = `Количество выбранных постов: ${countPost}`;
-};
-
 const handlerButton = () => {
   const inputText = input.value.trim().toLowerCase();
+  const arrCheckbox = document.querySelectorAll(".item__checkbox");
+  const arrCondition = [];
+  for (let elem of arrCheckbox)
+    if (elem.checked) {
+      let index = data.findIndex(
+        (el) =>
+          el.title ===
+          elem.parentElement.querySelector(".item__title").textContent
+      );
+      if (~index)
+        arrCondition.push({ id: data[index].id, title: data[index].title });
+    }
   gridEmoji.innerHTML = "";
   data.filter((el) => el.title.toLowerCase().includes(inputText) && render(el));
-  countPost = 0;
+  const arrCard = [...document.querySelectorAll(".grid__item")];
+  for (let i = 0; i < arrCard.length; i++) {
+    const index = arrCondition.findIndex(
+      (elem) =>
+        elem.title === arrCard[i].querySelector(".item__title").textContent
+    );
+    if (~index) {
+      arrCard[i].classList.add("item__dark");
+      arrCard[i].querySelector(".item__checkbox").checked = true;
+    }
+  }
+  countPost = arrCondition.length;
   count.textContent = `Количество выбранных постов: ${countPost}`;
   setURL();
 };
@@ -100,13 +107,6 @@ button.addEventListener("click", handlerButton);
 window.addEventListener("click", (event) => {
   if ([...document.querySelectorAll(".item__checkbox")].includes(event.target))
     handlerCheckbox(event);
-  else if (
-    [...document.querySelectorAll(".grid__item")].includes(
-      event.target.parentElement
-    ) ||
-    [...document.querySelectorAll(".grid__item")].includes(event.target)
-  )
-    handlerClickItem(event);
 });
 
 window.addEventListener("unload", () => {
